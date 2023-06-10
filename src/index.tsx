@@ -6,6 +6,7 @@ import manifest, {name as plugin_name} from '../manifest.json'
 import Settings from "./components/Settings"
 import {getStoreHandlers} from "../../hook"
 import {bulk, filters} from "enmity/modules"
+import {get} from "enmity/api/settings";
 
 const [
     MessageStore
@@ -31,17 +32,21 @@ const PreviewFile: Plugin = {
             if (message.content) message.content += "\n\n"
             for (const attachment of message.attachments) {
                 if (attachment.content_type && (attachment.content_type.startsWith("text/") || knownFormats.includes(attachment.content_type.split(";")[0]))) {
-                    const size = attachment.size > 1000 ? 1000 : attachment.size
+                    let savedSize = Number(get(plugin_name, "size", "1000"))
+                    if (typeof savedSize !== "number") savedSize = 1000
+                    const size = attachment.size > savedSize ? savedSize : attachment.size
                     const resp = await fetch(attachment.url, {
                         headers: {
-                            'range': `bytes=-${size}`
+                            'Range': `bytes=0-${size}`
                         }
                     })
                     const filename = attachment.url.split("/").slice(-1)[0]
                     const ext = attachment.url.split(".").slice(-1)[0]
                     let text = await resp.text()
                     let lines = text.split("\n")
-                    if (lines.length > 10) lines = lines.slice(0, 10)
+                    let savedLines = Number(get(plugin_name, "lines", "10"))
+                    if (typeof savedLines !== "number") savedLines = 10
+                    if (lines.length > savedLines) lines = lines.slice(0, savedLines)
                     text = lines.join("\n")
                     message.content += `\`${filename}\` \`\`\`${ext}\n${text}\n\`\`\`\n`
                 }
