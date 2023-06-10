@@ -1,0 +1,12 @@
+{
+  "name": "PreviewFile",
+  "version": "1.0.0",
+  "description": "allow previewing text files",
+  "authors": [
+    {
+      "name": "mafu",
+      "id": "519760564755365888"
+    }
+  ],
+  "color": "#00a3af"
+}
