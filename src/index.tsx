@@ -29,7 +29,7 @@ const PreviewFile: Plugin = {
         const knownFormats = ["application/json", "application/javascript"]
 
         async function parseMessage(message) {
-            if (message.content) message.content += "\n\n"
+            let preview = ""
             for (const attachment of message.attachments) {
                 if (attachment.content_type && (attachment.content_type.startsWith("text/") || knownFormats.includes(attachment.content_type.split(";")[0]))) {
                     let savedSize = Number(get(plugin_name, "size", "1000"))
@@ -48,12 +48,16 @@ const PreviewFile: Plugin = {
                     if (typeof savedLines !== "number") savedLines = 10
                     if (lines.length > savedLines) lines = lines.slice(0, savedLines)
                     text = lines.join("\n")
-                    message.content += `\`${filename}\` \`\`\`${ext}\n${text}\n\`\`\`\n`
+                    preview += `\`${filename}\` \`\`\`${ext}\n${text}\n\`\`\`\n`
                 }
+            }
+            if (preview){
+                message.content += `\n\n${preview}`
             }
             FluxDispatcher.dispatch({
                 type: 'MESSAGE_UPDATE',
-                message: message
+                message: message,
+                ignore: true
             })
         }
 
