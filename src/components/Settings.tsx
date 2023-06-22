@@ -70,7 +70,6 @@ export default ({settings}) => {
             <FormSection title="SETTING">
                 <FormInput
                     title="Max file size"
-                    placeholder="1000"
                     value={settings.get("size", "1000")}
                     onSubmitEditing={(event) => {
                         if (isNaN(event.nativeEvent.text)) {
@@ -85,7 +84,6 @@ export default ({settings}) => {
                 />
                 <FormInput
                     title="Max number of lines"
-                    placeholder="10"
                     value={settings.get("lines", "10")}
                     onSubmitEditing={(event) => {
                         if (isNaN(event.nativeEvent.text)) {
