@@ -51,14 +51,14 @@ const PreviewFile: Plugin = {
                     preview += `\`${filename}\` \`\`\`${ext}\n${text}\n\`\`\`\n`
                 }
             }
-            if (preview){
+            if (preview) {
                 message.content += `\n\n${preview}`
+                FluxDispatcher.dispatch({
+                    type: 'MESSAGE_UPDATE',
+                    message: message,
+                    ignore: true
+                })
             }
-            FluxDispatcher.dispatch({
-                type: 'MESSAGE_UPDATE',
-                message: message,
-                ignore: true
-            })
         }
 
 
